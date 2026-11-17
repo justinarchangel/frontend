@@ -1,0 +1,21 @@
+<h1>Tacostagram</h1>
+
+<% for post in @posts %>
+  <div>
+    <% user = User.find_by({ "id" => post["user_id"] }) %>
+    <% if user %>
+      <h3><%= user["first_name"] %></h3>
+    <% else %>
+      <%# posts from before user_id existed have no user; they still carry an author %>
+      <h3><%= post["author"] %></h3>
+    <% end %>
+    <img src="<%= post["image"] %>" width="400">
+    <p><%= post["body"] %></p>
+    <% if @current_user && post["user_id"] == @current_user["id"] %>
+      <form action="/posts/<%= post["id"] %>" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button>Delete</button>
+      </form>
+    <% end %>
+  </div>
+<% end %>
